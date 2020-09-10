@@ -1,11 +1,12 @@
 import tvm
+from tvm import te
 
 n = 1024
-A = tvm.placeholder((n, n), name='A')
-B = tvm.placeholder((n,n), name='B')
-C = tvm.compute((n, n), lambda i, j: A[i, j] + B[i, j], name='C')
+A = te.placeholder((n, n), name='A')
+B = te.placeholder((n,n), name='B')
+C = te.compute((n, n), lambda i, j: A[i, j] + B[i, j], name='C')
 
-s = tvm.create_schedule(C.op)
+s = te.create_schedule(C.op)
 
 xo, xi = s[C].split(s[C].op.axis[0], factor=32)
 yo, yi = s[C].split(s[C].op.axis[1], factor=32)
